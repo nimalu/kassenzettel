@@ -7,7 +7,7 @@ export type ReceiptItem = {
     detail?: string
 }
 const props = withDefaults(defineProps<{
-    layout?: "lidl",
+    layout?: "lidl" | "real",
     items: ReceiptItem[]
 }>(), { layout: "lidl" })
 const price = computed(() => props.items.reduce((a, b) => b.price + a, 0))
@@ -105,6 +105,61 @@ const taxGroups = computed(() => {
             <div>{{ taxGroups.reduce((a, b) => b.tax + a, 0).toFixed(2) }}</div>
             <div>{{ taxGroups.reduce((a, b) => b.net + a, 0).toFixed(2) }}</div>
             <div>{{ price.toFixed(2) }}</div>
+        </div>
+    </div>
+    <div v-else-if="layout == 'real'" class="w-full">
+        <div class="items w-full pl-16 pr-6 mt-8 justify-between grid grid-cols-[max-content_1fr_max-content]">
+            <template v-for="item in items">
+                <div>
+                    {{ item.name }}
+                </div>
+                <div class="text-right">
+                    {{ item.price }}
+                    {{ item.negative ? "-" : "&nbsp;" }}
+                </div>
+                <div>
+                    {{ item.taxClass }}
+                </div>
+                <template v-if="item.detail">
+                    <div class="col-span-3">
+                        {{ item.detail }}
+                    </div>
+                </template>
+            </template>
+            <div class="flex justify-between font-bold">
+                <div>Summe</div>
+                <div>EUR</div>
+            </div>
+            <div class="text-right font-bold">{{ price.toFixed(2) }}&nbsp;&nbsp;</div>
+            <div>&nbsp;</div>
+            <div class="col-span-3">&nbsp;</div>
+            <div class="flex justify-between">
+                <div>Bar</div>
+                <div>EUR</div>
+            </div>
+            <div class="text-right">{{ payed.toFixed(2) }}&nbsp;&nbsp;</div>
+            <div>&nbsp;</div>
+            <div class="flex justify-between">
+                <div>Rückgeld</div>
+                <div>EUR</div>
+            </div>
+            <div class="text-right">{{ (payed - price).toFixed(2) }}&nbsp;&nbsp;</div>
+            <div>&nbsp;</div>
+        </div>
+        <div class="mt-8 w-full pl-16 pr-10 ">
+            <div class="w-full flex justify-between gap-x-1">
+                <div>Mehrwerstst.</div>
+                <div>ohne MwSt</div>
+                <div>mit MwSt</div>
+            </div>
+            <div class="w-full grid grid-cols-[2fr_2fr_2fr_2fr] text-right">
+                <template v-for="taxGroup in taxGroups">
+                    <div class="text-left">{{ taxGroup.taxClass }} {{ (taxGroup.taxRate * 100).toFixed(1) }}%</div>
+                    <div>{{ taxGroup.tax.toFixed(2) }}</div>
+                    <div>{{ taxGroup.net.toFixed(2) }}</div>
+                    <div>{{ taxGroup.gross }}</div>
+                </template>
+            </div>
         </div>
     </div>
 </template>

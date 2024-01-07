@@ -8,7 +8,8 @@ interface Props {
     width: string,
     address: string,
     py: string,
-    px: string
+    px: string,
+    barcodeHeight: string,
 }
 withDefaults(defineProps<Props>(), {
     layout: "lidl",
@@ -16,7 +17,8 @@ withDefaults(defineProps<Props>(), {
     width: "400px",
     address: "Mageburger Straße\n39245 Gommern\nMo-Sa 8-14 Uhr So geschlossen",
     py: "1rem",
-    px: "10px"
+    px: "10px",
+    barcodeHeight: "100rem"
 })
 const items: ReceiptItem[] = [
     { name: "Salami la Paprika", price: 0.99, taxClass: "A" },
@@ -33,9 +35,9 @@ const items: ReceiptItem[] = [
             <div class="address whitespace-pre text-center">
                 {{ address }}
             </div>
-            <ReceiptItems :items="items" />
-            <div class="mt-10">
-                <Barcode value="adfjalk" />
+            <ReceiptItems :items="items" layout="lidl" />
+            <div class="mt-6">
+                <Barcode :value="barcodeHeight" :height="barcodeHeight" />
             </div>
             <div class="w-full flex justify-between">
                 <div>5571</div>
