@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { ReceiptItem } from './ReceiptItems.vue';
 
-
 interface Props {
     layout: "lidl",
     background: string,
@@ -10,6 +9,7 @@ interface Props {
     py: string,
     px: string,
     barcodeHeight: string,
+    items: ReceiptItem[]
 }
 withDefaults(defineProps<Props>(), {
     layout: "lidl",
@@ -18,13 +18,13 @@ withDefaults(defineProps<Props>(), {
     address: "Mageburger Straße\n39245 Gommern\nMo-Sa 8-14 Uhr So geschlossen",
     py: "1rem",
     px: "10px",
-    barcodeHeight: "100rem"
+    barcodeHeight: "100rem",
+    items: () => [
+        { name: "Salami la Paprika", price: 0.99, taxClass: "A" },
+        { name: "Trauben hell kg", price: 2.02, taxClass: "A", detail: "0,912 kg x 2,22   EUR/kg" },
+        { name: "Dosenbier", price: 0.99, taxClass: "B" },
+    ] 
 })
-const items: ReceiptItem[] = [
-    { name: "Salami la Paprika", price: 0.99, taxClass: "A" },
-    { name: "Trauben hell kg", price: 2.02, taxClass: "A", detail: "0,912 kg x 2,22   EUR/kg" },
-    { name: "Dosenbier", price: 0.99, taxClass: "B" },
-]
 </script>
 
 <template>

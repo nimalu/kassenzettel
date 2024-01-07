@@ -5,19 +5,19 @@ async function hit() {
   const resJSON: { image: string } = await res.json()
   screenshot.value = `data:image/png;base64,${resJSON.image}`
 }
+
+const address = ref("Mageburger Straße\n39245 Gommern\nMo-Sa 8-14 Uhr So geschlossen")
 </script>
 <template>
-  <div class="flex items-center justify-center mt-10">
-    <Receipt />
-    <button @click="hit" class="bg-white">Hit</button>
-    <img :src="screenshot" alt="">
-  </div>
+  <main class="p-10 bg-slate-100 flex gap-x-8">
+    <div class="gap-y-4">
+      <TextArea v-model="address" label="Address" />
+    </div>
+    <Receipt :address="address" />
+  </main>
 </template>
 
 <style>
-body {
-  background-color: #111;
-}
 #nuxt-devtools-container {
   visibility: hidden;
 }
