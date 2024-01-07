@@ -31,7 +31,7 @@ withDefaults(defineProps<Props>(), {
     <div id="receipt" class="flex flex-col items-center leading-4"
         :style="{ 'background-color': background, 'width': width, 'font-family': 'Inconsolata', 'padding': `${py} ${px}` }">
         <template v-if="layout == 'lidl'">
-            <img class="w-20" src="/assets/lidl-logo.png" alt="lidl-logo">
+            <img class="logo w-20" src="/assets/lidl-logo.png" alt="lidl-logo">
             <div class="address whitespace-pre text-center">
                 {{ address }}
             </div>
@@ -61,3 +61,9 @@ withDefaults(defineProps<Props>(), {
         </template>
     </div>
 </template>
+
+<style>
+.masks .logo {
+    opacity: 0;
+}
+</style>

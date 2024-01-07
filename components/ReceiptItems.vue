@@ -163,3 +163,10 @@ const taxGroups = computed(() => {
         </div>
     </div>
 </template>
+
+<style>
+.masks .items {
+    color: red;
+    background-color: red;
+}
+</style>

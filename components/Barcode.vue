@@ -7,5 +7,11 @@ onMounted(() => JsBarcode("#barcode", props.value, {
 }))
 </script>
 <template>
-    <svg id="barcode"></svg>
+    <svg class="barcode" id="barcode"></svg>
 </template>
+
+<style>
+.masks .barcode {
+    opacity: 0;
+}
+</style>
