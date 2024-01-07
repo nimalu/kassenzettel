@@ -28,7 +28,7 @@ const items: ReceiptItem[] = [
 </script>
 
 <template>
-    <div class="receipt flex flex-col items-center leading-4"
+    <div id="receipt" class="flex flex-col items-center leading-4"
         :style="{ 'background-color': background, 'width': width, 'font-family': 'Inconsolata', 'padding': `${py} ${px}` }">
         <template v-if="layout == 'lidl'">
             <img class="w-20" src="/assets/lidl-logo.png" alt="lidl-logo">
