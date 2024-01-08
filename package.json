@@ -18,6 +18,7 @@
     "vue-router": "^4.2.5"
   },
   "dependencies": {
-    "puppeteer": "^21.7.0"
+    "puppeteer": "^21.7.0",
+    "vue-color-input": "^1.0.8"
   }
 }

@@ -41,9 +41,9 @@ const taxGroups = computed(() => {
                 <div>
                     {{ item.name }}
                 </div>
-                <div>
+                <div class="text-right">
                     {{ item.negative ? "-" : "&nbsp;" }}
-                    {{ item.price }}
+                    {{ item.price.toFixed(2) }}
                 </div>
                 <div>
                     {{ item.taxClass }}
@@ -79,11 +79,7 @@ const taxGroups = computed(() => {
                 <div>{{ (price - payed).toFixed(2) }}&nbsp;</div>
             </div>
         </div>
-        <div class="my-4 w-full font-bold grid grid-cols-[1fr_50px]">
-            <div>Gesamter Rabatt</div>
-            <div>0,30</div>
-        </div>
-        <div class="w-full grid grid-cols-[1fr_1fr_1fr_max-content]">
+        <div class="mt-4 w-full grid grid-cols-[1fr_1fr_1fr_max-content]">
             <div>MWST%</div>
             <div class="grid grid-cols-[max-content_1fr]">
                 <div>MWST</div>
@@ -98,7 +94,7 @@ const taxGroups = computed(() => {
                 <div>{{ taxGroup.taxClass }}&nbsp;&nbsp;{{ (taxGroup.taxRate * 100).toFixed() }} %</div>
                 <div>{{ taxGroup.tax.toFixed(2) }}</div>
                 <div>{{ taxGroup.net.toFixed(2) }}</div>
-                <div>{{ taxGroup.gross }}</div>
+                <div class="text-right">{{ taxGroup.gross.toFixed(2) }}</div>
             </template>
             <div class="col-span-4">-----------------------------------------------</div>
             <div>Summe</div>

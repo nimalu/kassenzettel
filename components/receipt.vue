@@ -1,17 +1,30 @@
 <script setup lang="ts">
 import type { ReceiptItem } from './ReceiptItems.vue';
 
-interface Props {
-    layout: "lidl",
-    background: string,
-    width: string,
-    address: string,
-    py: string,
-    px: string,
-    barcodeHeight: string,
-    items: ReceiptItem[]
+function hashCode(str: string) {
+    let hash = 0;
+    for (let i = 0, len = str.length; i < len; i++) {
+        let chr = str.charCodeAt(i);
+        hash = (hash << 5) - hash + chr;
+        hash |= 0;
+    }
+    return hash;
 }
-withDefaults(defineProps<Props>(), {
+
+
+interface Props {
+    items: ReceiptItem[]
+    layout?: "lidl",
+    background?: string,
+    width?: string,
+    address?: string,
+    py?: string,
+    px?: string,
+    barcodeHeight?: string,
+    date?: Date,
+    detail1?: string,
+}
+const { items } = withDefaults(defineProps<Props>(), {
     layout: "lidl",
     background: "white",
     width: "400px",
@@ -19,11 +32,12 @@ withDefaults(defineProps<Props>(), {
     py: "1rem",
     px: "10px",
     barcodeHeight: "100rem",
-    items: () => [
-        { name: "Salami la Paprika", price: 0.99, taxClass: "A" },
-        { name: "Trauben hell kg", price: 2.02, taxClass: "A", detail: "0,912 kg x 2,22   EUR/kg" },
-        { name: "Dosenbier", price: 0.99, taxClass: "B" },
-    ] 
+    date: () => new Date(),
+    detail1: "\nUST-ID-NR: DE8141100850\n* * * *\nVIELEN DANK FÜR IHREN EINKAUF!\nLIDL LOHNT SICH.\n* * * *\n+ Ausbildung oder Duales Studium? +\nLidl bietet beides!\nVertrieb, Logistik oder Büro.\nBewerben Sie sich jetzt für den\nAusbildungs-/ Studienbeginn 2015\n+ + + www.karriere-bei-lidl.de + + +"
+})
+const barcodeValue = computed(() => {
+    const names = items.map(i => i.name).reduce((a, b) => a + b, "")
+    return Math.max(hashCode(names), -hashCode(names)).toString()
 })
 </script>
 
@@ -37,26 +51,16 @@ withDefaults(defineProps<Props>(), {
             </div>
             <ReceiptItems :items="items" layout="lidl" />
             <div class="mt-6">
-                <Barcode :value="barcodeHeight" :height="barcodeHeight" />
+                <Barcode :value="barcodeValue" :height="barcodeHeight" />
             </div>
             <div class="w-full flex justify-between">
                 <div>5571</div>
                 <div>140377/03</div>
-                <div>30.12.14</div>
-                <div>13:22</div>
+                <div>{{ date.toLocaleDateString("de-DE") }}</div>
+                <div>{{ date.toLocaleTimeString("de-DE") }}</div>
             </div>
-            <div class="mt-4 flex flex-col items-center">
-                <div>UST-ID-NR: DE8141100850</div>
-                <div>* * * *</div>
-                <div>VIELEN DANK FÜR IHREN EINKAUF!</div>
-                <div>LIDL LOHNT SICH.</div>
-                <div>* * * *</div>
-                <div>+ Ausbildung oder Duales Studium? +</div>
-                <div>Lidl bietet beides!</div>
-                <div>Vertrieb, Logistik oder Büro.</div>
-                <div>Bewerben Sie sich jetzt für den</div>
-                <div>Ausbildungs-/ Studienbeginn 2015</div>
-                <div>+ + + www.karriere-bei-lidl.de + + +</div>
+            <div class="mt-4 text-center whitespace-pre">
+                {{ detail1 }}
             </div>
         </template>
     </div>
