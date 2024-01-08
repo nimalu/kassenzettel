@@ -13,7 +13,7 @@ function hashCode(str: string) {
 }
 
 
-export interface Props {
+export interface Receipt {
     items: ReceiptItem[]
     layout?: "lidl",
     itemsLayout?: ReceiptItemsProps["layout"],
@@ -30,47 +30,36 @@ export interface Props {
     qrcode?: boolean,
     card?: boolean,
 }
-const { items } = withDefaults(defineProps<Props>(), {
-    layout: "lidl",
-    itemsLayout: "lidl",
-    background: "white",
-    width: "400px",
-    address: "Mageburger Straße\n39245 Gommern\nMo-Sa 8-14 Uhr So geschlossen",
-    py: "1rem",
-    px: "10px",
-    barcodeHeight: "100rem",
-    date: () => new Date(),
-    detail1: "\nUST-ID-NR: DE8141100850\n* * * *\nVIELEN DANK FÜR IHREN EINKAUF!\nLIDL LOHNT SICH.\n* * * *\n+ Ausbildung oder Duales Studium? +\nLidl bietet beides!\nVertrieb, Logistik oder Büro.\nBewerben Sie sich jetzt für den\nAusbildungs-/ Studienbeginn 2015\n+ + + www.karriere-bei-lidl.de + + +",
-    font: "Inconsolata"
-})
+const { receipt } = defineProps<{ receipt: Receipt }>()
 const barcodeValue = computed(() => {
-    const names = items.map(i => i.name).reduce((a, b) => a + b, "")
+    const names = receipt.items.map(i => i.name).reduce((a, b) => a + b, "")
     return Math.max(hashCode(names), -hashCode(names)).toString()
 })
 </script>
 
 <template>
     <div id="receipt" class="flex flex-col items-center leading-4"
-        :style="{ 'background-color': background, 'width': width, 'font-family': font, 'padding': `${py} ${px}` }">
-        <template v-if="layout == 'lidl'">
+        :style="{ 'background-color': receipt.background, 'width': receipt.width, 'font-family': receipt.font, 'padding': `${receipt.py} ${receipt.px}` }">
+        <template v-if="receipt.layout == 'lidl'">
             <img class="logo w-20" src="/assets/lidl-logo.png" alt="lidl-logo">
             <div class="address whitespace-pre text-center">
-                {{ address }}
+                {{ receipt.address }}
             </div>
-            <ReceiptItems :items="items" :layout="itemsLayout" :card="card" />
+            <ReceiptItems :items="receipt.items" :layout="receipt.itemsLayout" :card="receipt.card" />
             <div class="mt-6 flex flex-col items-center">
-                <Barcode v-if="barcode" :value="barcodeValue" :height="barcodeHeight" />
-                <qrcode-vue v-if="qrcode" :value="barcodeValue + 'aö42q8780cjlöö344jkl238907897cxv9nklj23q4öjklxcv8q3ß9ß5390ß89cjvadsjcyvjüwerou8923#k'"
+                <Barcode v-if="receipt.barcode" :value="barcodeValue" :height="receipt.barcodeHeight" />
+                <qrcode-vue v-if="receipt.qrcode"
+                    :value="barcodeValue + 'aö42q8780cjlöö344jkl238907897cxv9nklj23q4öjklxcv8q3ß9ß5390ß89cjvadsjcyvjüwerou8923#k'"
                     background="transparent" :size="200" />
             </div>
             <div class="w-full flex justify-between">
                 <div>5571</div>
                 <div>140377/03</div>
-                <div>{{ date.toLocaleDateString("de-DE") }}</div>
-                <div>{{ date.toLocaleTimeString("de-DE") }}</div>
+                <div>{{ receipt.date?.toLocaleDateString("de-DE") }}</div>
+                <div>{{ receipt.date?.toLocaleTimeString("de-DE") }}</div>
             </div>
             <div class="mt-4 text-center whitespace-pre">
-                {{ detail1 }}
+                {{ receipt.detail1 }}
             </div>
         </template>
     </div>
