@@ -13,7 +13,7 @@ const id = computed(() => label ? label : uuid.value?.toString())
 const model = defineModel<string>()
 </script>
 <template>
-    <div class="w-64">
+    <div>
         <label :for="id" class="block mb-2 text-sm font-medium text-gray-900">{{ label }}</label>
         <color-input v-model="model" position="bottom right" />
     </div>

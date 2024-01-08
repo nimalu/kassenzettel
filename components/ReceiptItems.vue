@@ -6,10 +6,11 @@ export type ReceiptItem = {
     taxClass?: string,
     detail?: string
 }
-const props = withDefaults(defineProps<{
+export type Props = {
     layout?: "lidl" | "real",
     items: ReceiptItem[]
-}>(), { layout: "lidl" })
+}
+const props = withDefaults(defineProps<Props>(), { layout: "lidl" })
 const price = computed(() => props.items.reduce((a, b) => b.price + a, 0))
 const payed = computed(() => Math.round(price.value / 10.0 + 0.5) * 10)
 const taxGroups = computed(() => {

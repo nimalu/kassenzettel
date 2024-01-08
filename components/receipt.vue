@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ReceiptItem } from './ReceiptItems.vue';
+import type { ReceiptItem, Props as ReceiptItemsProps } from './ReceiptItems.vue';
 
 function hashCode(str: string) {
     let hash = 0;
@@ -12,9 +12,10 @@ function hashCode(str: string) {
 }
 
 
-interface Props {
+export interface Props {
     items: ReceiptItem[]
     layout?: "lidl",
+    itemsLayout?: ReceiptItemsProps["layout"],
     background?: string,
     width?: string,
     address?: string,
@@ -23,9 +24,11 @@ interface Props {
     barcodeHeight?: string,
     date?: Date,
     detail1?: string,
+    font?: string,
 }
 const { items } = withDefaults(defineProps<Props>(), {
     layout: "lidl",
+    itemsLayout: "lidl",
     background: "white",
     width: "400px",
     address: "Mageburger Straße\n39245 Gommern\nMo-Sa 8-14 Uhr So geschlossen",
@@ -33,7 +36,8 @@ const { items } = withDefaults(defineProps<Props>(), {
     px: "10px",
     barcodeHeight: "100rem",
     date: () => new Date(),
-    detail1: "\nUST-ID-NR: DE8141100850\n* * * *\nVIELEN DANK FÜR IHREN EINKAUF!\nLIDL LOHNT SICH.\n* * * *\n+ Ausbildung oder Duales Studium? +\nLidl bietet beides!\nVertrieb, Logistik oder Büro.\nBewerben Sie sich jetzt für den\nAusbildungs-/ Studienbeginn 2015\n+ + + www.karriere-bei-lidl.de + + +"
+    detail1: "\nUST-ID-NR: DE8141100850\n* * * *\nVIELEN DANK FÜR IHREN EINKAUF!\nLIDL LOHNT SICH.\n* * * *\n+ Ausbildung oder Duales Studium? +\nLidl bietet beides!\nVertrieb, Logistik oder Büro.\nBewerben Sie sich jetzt für den\nAusbildungs-/ Studienbeginn 2015\n+ + + www.karriere-bei-lidl.de + + +",
+    font: "Inconsolata"
 })
 const barcodeValue = computed(() => {
     const names = items.map(i => i.name).reduce((a, b) => a + b, "")
@@ -43,13 +47,13 @@ const barcodeValue = computed(() => {
 
 <template>
     <div id="receipt" class="flex flex-col items-center leading-4"
-        :style="{ 'background-color': background, 'width': width, 'font-family': 'Inconsolata', 'padding': `${py} ${px}` }">
+        :style="{ 'background-color': background, 'width': width, 'font-family': font, 'padding': `${py} ${px}` }">
         <template v-if="layout == 'lidl'">
             <img class="logo w-20" src="/assets/lidl-logo.png" alt="lidl-logo">
             <div class="address whitespace-pre text-center">
                 {{ address }}
             </div>
-            <ReceiptItems :items="items" layout="lidl" />
+            <ReceiptItems :items="items" :layout="itemsLayout" />
             <div class="mt-6">
                 <Barcode :value="barcodeValue" :height="barcodeHeight" />
             </div>
