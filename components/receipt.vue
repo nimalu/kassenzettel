@@ -28,6 +28,7 @@ export interface Props {
     font?: string,
     barcode?: boolean,
     qrcode?: boolean,
+    card?: boolean,
 }
 const { items } = withDefaults(defineProps<Props>(), {
     layout: "lidl",
@@ -56,7 +57,7 @@ const barcodeValue = computed(() => {
             <div class="address whitespace-pre text-center">
                 {{ address }}
             </div>
-            <ReceiptItems :items="items" :layout="itemsLayout" />
+            <ReceiptItems :items="items" :layout="itemsLayout" :card="card" />
             <div class="mt-6 flex flex-col items-center">
                 <Barcode v-if="barcode" :value="barcodeValue" :height="barcodeHeight" />
                 <qrcode-vue v-if="qrcode" :value="barcodeValue + 'aö42q8780cjlöö344jkl238907897cxv9nklj23q4öjklxcv8q3ß9ß5390ß89cjvadsjcyvjüwerou8923#k'"

@@ -9,7 +9,8 @@ export type ReceiptItem = {
 }
 export type Props = {
     layout?: "lidl" | "real",
-    items: ReceiptItem[]
+    items: ReceiptItem[],
+    card?: boolean,
 }
 const props = withDefaults(defineProps<Props>(), { layout: "lidl" })
 const price = computed(() => props.items.reduce((a, b) => b.price + a, 0))
@@ -72,11 +73,15 @@ const taxGroups = computed(() => {
             <div class="text-right -mt-5">-----------</div>
         </div>
         <div>
-            <div class="flex justify-between">
+            <div v-if="card" class="flex justify-between">
+                <div>EC-Karte</div>
+                <div>{{ price.toFixed(2) }}&nbsp;</div>
+            </div>
+            <div v-if="!card" class="flex justify-between">
                 <div>Bar</div>
                 <div>{{ payed.toFixed(2) }}&nbsp;</div>
             </div>
-            <div class="flex justify-between">
+            <div v-if="!card" class="flex justify-between">
                 <div>Rückgeld</div>
                 <div>{{ (price - payed).toFixed(2) }}&nbsp;</div>
             </div>
@@ -155,7 +160,7 @@ const taxGroups = computed(() => {
                     <div class="text-left">{{ taxGroup.taxClass }} {{ (taxGroup.taxRate * 100).toFixed(1) }}%</div>
                     <div>{{ taxGroup.tax.toFixed(2) }}</div>
                     <div>{{ taxGroup.net.toFixed(2) }}</div>
-                    <div>{{ taxGroup.gross }}</div>
+                    <div>{{ taxGroup.gross.toFixed(2) }}</div>
                 </template>
             </div>
         </div>

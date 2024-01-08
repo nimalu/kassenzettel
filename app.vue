@@ -24,6 +24,7 @@ const detail1 = ref("UST-ID-NR: DE8141100850\n* * * *\nVIELEN DANK FÜR IHREN EI
 const layout = ref<ReceiptProps["layout"]>("lidl")
 const itemsLayout = ref<ReceiptItemsProps["layout"]>("lidl")
 const font = ref<string>("Inconsolata")
+const card = ref(false)
 </script>
 
 <template>
@@ -32,16 +33,17 @@ const font = ref<string>("Inconsolata")
       <Switch label="Masks" v-model="masks" />
       <Select label="Layout" v-model="layout" :options="['lidl']" />
       <Select label="ItemsLayout" v-model="itemsLayout" :options="['lidl', 'real']" />
-      <Select label="Font" v-model="font" :options="['Inconsolata', 'DejavuSansMono']" />
       <ItemEditor v-model="items" />
       <ClientOnly>
         <ColorPicker v-model="color" label="Background" />
       </ClientOnly>
       <TextArea v-model="address" label="Address" />
       <TextArea v-model="detail1" label="Detail 1" />
+      <Select label="Font" v-model="font" :options="['Inconsolata', 'DejavuSansMono']" />
       <DatePicker label="Date" v-model="date" />
+      <Switch label="Card" v-model="card" />
     </div>
-    <Receipt :layout="layout" :items-layout="itemsLayout" :font="font" :background="color" :address="address"
+    <Receipt :card="card" :layout="layout" :items-layout="itemsLayout" :font="font" :background="color" :address="address"
       :items="items" :date="date" :detail1="detail1" />
   </main>
 </template>
