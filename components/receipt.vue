@@ -69,4 +69,7 @@ const barcodeValue = computed(() => {
 .masks .logo {
     opacity: 0;
 }
+.masks #receipt {
+  color: transparent;
+}
 </style>
