@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 export type ReceiptItem = {
     name: string,
     price: number,

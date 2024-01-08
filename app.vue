@@ -27,7 +27,7 @@ const font = ref<string>("Inconsolata")
 </script>
 
 <template>
-  <main class="p-10 flex gap-x-8" :class="{ masks }">
+  <main class="p-10 flex gap-x-8 items-start" :class="{ masks }">
     <div class="grid grid-cols-1 gap-4 content-start">
       <Switch label="Masks" v-model="masks" />
       <Select label="Layout" v-model="layout" :options="['lidl']" />

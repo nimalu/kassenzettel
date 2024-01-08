@@ -32,7 +32,7 @@ function update<T extends keyof ReceiptItem>(index: number, key: T, value: Recei
                 <input type="text" class="w-48 border" :value="item.name"
                     @input="e => update(index, 'name', e.target.value)">
                 <input type="text" class="w-16 border text-right" :value="item.price"
-                    @input="e => update(index, 'price', e.target.value)">
+                    @change="e => update(index, 'price', e.target.value)">
                 <input type="text" class="w-5 border text-center" :value="item.taxClass"
                     @input="e => update(index, 'taxClass', e.target.value)">
                 <input type="text" class="w-28 border" :value="item.detail"

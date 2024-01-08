@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import QrcodeVue from 'qrcode.vue'
 import type { ReceiptItem, Props as ReceiptItemsProps } from './ReceiptItems.vue';
 
 function hashCode(str: string) {
@@ -25,6 +26,8 @@ export interface Props {
     date?: Date,
     detail1?: string,
     font?: string,
+    barcode?: boolean,
+    qrcode?: boolean,
 }
 const { items } = withDefaults(defineProps<Props>(), {
     layout: "lidl",
@@ -54,8 +57,10 @@ const barcodeValue = computed(() => {
                 {{ address }}
             </div>
             <ReceiptItems :items="items" :layout="itemsLayout" />
-            <div class="mt-6">
-                <Barcode :value="barcodeValue" :height="barcodeHeight" />
+            <div class="mt-6 flex flex-col items-center">
+                <Barcode v-if="barcode" :value="barcodeValue" :height="barcodeHeight" />
+                <qrcode-vue v-if="qrcode" :value="barcodeValue + 'aö42q8780cjlöö344jkl238907897cxv9nklj23q4öjklxcv8q3ß9ß5390ß89cjvadsjcyvjüwerou8923#k'"
+                    background="transparent" :size="200" />
             </div>
             <div class="w-full flex justify-between">
                 <div>5571</div>
