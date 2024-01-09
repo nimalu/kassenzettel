@@ -15,8 +15,8 @@ function hashCode(str: string) {
 
 export interface Receipt {
     items: ReceiptItem[]
-    layout?: "lidl",
-    itemsLayout?: ReceiptItemsProps["layout"],
+    layout: "lidl",
+    itemsLayout: ReceiptItemsProps["layout"],
     background?: string,
     width?: string,
     address?: string,

@@ -28,6 +28,7 @@ const receipt = reactive<Receipt>({
     px: "1rem",
     py: "1rem"
 })
+
 </script>
 
 <template>

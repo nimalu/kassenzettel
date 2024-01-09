@@ -21,6 +21,8 @@
     "@vuepic/vue-datepicker": "^7.4.1",
     "puppeteer": "^21.7.0",
     "qrcode.vue": "^3.4.1",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
     "vue-color-input": "^1.0.8"
   }
 }
