@@ -1,4 +1,3 @@
-import { useRepo } from "../../../utils/repo"
 import screenshot from "../../../utils/screenshot"
 
 export default defineEventHandler(async (event) => {
@@ -6,10 +5,14 @@ export default defineEventHandler(async (event) => {
     if (!id) {
         throw new Error("Bad Request")
     }
-    const repo = await useRepo()
     await screenshot(
         `http://localhost:3000/receipt/${id}`,
         "#receipt",
         `public/images/${id}.png`
+    )
+    await screenshot(
+        `http://localhost:3000/receipt/${id}?masks=1`,
+        "#receipt",
+        `public/masks/${id}.png`
     )
 })

@@ -7,6 +7,7 @@
 dist
 
 public/images
+public/masks
 *.db
 
 # Node dependencies
