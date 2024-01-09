@@ -18,7 +18,6 @@ export interface Receipt {
     layout: "lidl",
     itemsLayout: ReceiptItemsProps["layout"],
     background?: string,
-    width?: string,
     address?: string,
     py?: string,
     px?: string,
@@ -39,7 +38,7 @@ const barcodeValue = computed(() => {
 
 <template>
     <div id="receipt" class="flex flex-col items-center leading-4"
-        :style="{ 'background-color': receipt.background, 'width': receipt.width, 'font-family': receipt.font, 'padding': `${receipt.py} ${receipt.px}` }">
+        :style="{ 'background-color': receipt.background, 'width': '400px', 'font-family': receipt.font, 'padding': `${receipt.py} ${receipt.px}` }">
         <template v-if="receipt.layout == 'lidl'">
             <img class="logo w-20" src="/assets/lidl-logo.png" alt="lidl-logo">
             <div class="address whitespace-pre text-center">
@@ -49,6 +48,7 @@ const barcodeValue = computed(() => {
             <div class="mt-6 flex flex-col items-center">
                 <Barcode v-if="receipt.barcode" :value="barcodeValue" :height="receipt.barcodeHeight" />
                 <qrcode-vue v-if="receipt.qrcode"
+                    class="qrcode"
                     :value="barcodeValue + 'aö42q8780cjlöö344jkl238907897cxv9nklj23q4öjklxcv8q3ß9ß5390ß89cjvadsjcyvjüwerou8923#k'"
                     background="transparent" :size="200" />
             </div>
@@ -66,10 +66,11 @@ const barcodeValue = computed(() => {
 </template>
 
 <style>
-.masks .logo {
+.masks .logo, .masks .qrcode {
     opacity: 0;
 }
 .masks #receipt {
   color: transparent;
+  background-color: black !important;
 }
 </style>

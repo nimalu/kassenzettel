@@ -38,6 +38,8 @@ const receipt = reactive<Receipt>({
             <Select label="Layout" v-model="receipt.layout" :options="['lidl']" />
             <Select label="ItemsLayout" v-model="receipt.itemsLayout" :options="['lidl', 'real']" />
             <ItemEditor v-model="receipt.items" />
+            <Switch label="QRCode" v-model="receipt.qrcode" />
+            <Switch label="Barcode" v-model="receipt.barcode" />
             <ClientOnly>
                 <ColorPicker v-model="receipt.background" label="Background" />
                 <DatePicker label="Date" v-model="receipt.date" />
