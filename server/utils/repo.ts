@@ -1,8 +1,5 @@
 
-import sqlite3 from 'sqlite3'
-import { Database, open } from 'sqlite'
 import { useLogger } from '@nuxt/kit'
-sqlite3.verbose()
 
 interface SampleDB {
     id: string
@@ -10,45 +7,26 @@ interface SampleDB {
 }
 
 class Repo {
-    db: Database<sqlite3.Database, sqlite3.Statement>
-    constructor(db: Database<sqlite3.Database, sqlite3.Statement>) {
-        this.db = db
-    }
-
-    async init() {
-        await this.db.exec(`CREATE TABLE IF NOT EXISTS samples (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            receipt JSON
-        )`)
-    }
+    topId = 0
+    samples: Record<string, SampleDB> = {}
+    logger = useLogger("Repo")
 
     async createSample() {
-        const result = await this.db.run(
-            "INSERT INTO samples (receipt) VALUES ('{}')"
-        )
-        if (!result.lastID) {
-            throw new Error("Could not create new sample")
+        const id = ++this.topId
+        this.logger.debug("Creating sample ", id)
+        const sample: SampleDB = {
+            id: id.toString(), receipt: ""
         }
-        return result.lastID
+        this.samples[id.toString()] = sample
+        return id
     }
 
     async readSample(id: string) {
-        const sample = await this.db.get<SampleDB>(`
-            SELECT * FROM samples where id = ?
-        `, id)
-        if (!sample) {
-            throw new Error(id + " not found")
-        }
-        return sample
+        return this.samples[id]
     }
 
     async updateSample(sample: SampleDB) {
-        const { id, receipt } = sample
-        await this.db.run(`
-            UPDATE samples
-            SET receipt = ?
-            WHERE id = ?
-        `, receipt, id)
+        this.samples[sample.id] = sample
     }
 }
 
@@ -58,13 +36,6 @@ export async function useRepo() {
         return repo
     }
 
-    const logger = useLogger("Repo")
-    logger.info("Setting up db")
-    const db = await open({
-        filename: 'database.db',
-        driver: sqlite3.Database
-    })
-    repo = new Repo(db)
-    await repo.init()
+    repo = new Repo()
     return repo
 }

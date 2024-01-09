@@ -85,16 +85,16 @@ function generateRandomReceipt(): Receipt {
 const ids = ref<string[]>([])
 async function generate() {
     const jobs: Promise<void>[] = []
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 100; i++) {
         jobs.push((async () => {
             const receipt = generateRandomReceipt()
             const { id } = await $fetch(`/api/sample`, { method: 'POST', body: { receipt } })
-            await $fetch(`/api/sample/${id}/generate`, { method: 'POST' })
             ids.value.push(id)
+            await $fetch(`/api/sample/${id}/generate`, { method: 'POST' })
         })())
     }
     await Promise.all(jobs)
-    const blob = await $fetch(`/api/download`, { method: 'POST'}) as Blob
+    const blob = await $fetch(`/api/download`, { method: 'POST' }) as Blob
     const link = document.createElement("a")
     link.href = URL.createObjectURL(blob);
     document.body.appendChild(link)
@@ -105,7 +105,7 @@ async function generate() {
     <div class="p-4">
         <button @click="generate">Generate</button>
         <div class="w-full flex flex-wrap gap-1">
-            <div v-for="id in ids" :key="id" class="grid grid-cols-2 w-14 border">
+            <div v-for="id in ids" :key="id" class="grid grid-cols-2 w-36 border">
                 <img :src="'/images/' + id + '.png'" alt="">
                 <img :src="'/masks/' + id + '.png'" alt="">
             </div>
