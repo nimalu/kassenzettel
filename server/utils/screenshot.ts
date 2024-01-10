@@ -1,9 +1,13 @@
-import puppeteer, { Browser } from "puppeteer"
+import puppeteer, { Browser, Page } from "puppeteer"
 
+let browser: Browser
+let page: Page
 
-async function screenshot(url: string, selector: string, path: string) {
-    const browser = await puppeteer.launch()
-    const page = await browser.newPage()
+async function screenshot(url: string, selector: string) {
+    if (!page) {
+        browser = await puppeteer.launch()
+        page = await browser.newPage()
+    }
     await page.goto(url, { waitUntil: 'networkidle2' })
 
     await page.waitForSelector(selector)
@@ -11,8 +15,6 @@ async function screenshot(url: string, selector: string, path: string) {
     if (!element) {
         throw new Error("Couldn't find selector")
     }
-    await element.screenshot({ path })
-    await page.close()
-    await browser.close()
+    return await element.screenshot()
 }
 export default screenshot;

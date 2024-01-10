@@ -2,53 +2,55 @@
 import QrcodeVue from 'qrcode.vue'
 import type { ReceiptItem, Props as ReceiptItemsProps } from './ReceiptItems.vue';
 
-function hashCode(str: string) {
-    let hash = 0;
-    for (let i = 0, len = str.length; i < len; i++) {
-        let chr = str.charCodeAt(i);
-        hash = (hash << 5) - hash + chr;
-        hash |= 0;
-    }
-    return hash;
-}
-
-
-export interface Receipt {
-    items: ReceiptItem[]
-    layout: "lidl",
-    itemsLayout: ReceiptItemsProps["layout"],
+export interface Layout {
     background?: string,
-    address?: string,
     py?: string,
     px?: string,
     barcodeHeight?: string,
-    date?: Date,
-    detail1?: string,
     font?: string,
     barcode?: boolean,
     qrcode?: boolean,
+    itemsLayout?: ReceiptItemsProps["layout"]
+}
+export interface Receipt {
+    items: ReceiptItem[]
+    layoutBase: "lidl",
+    layout: Layout,
+    address?: string,
+    date?: Date,
+    detail1?: string,
     card?: boolean,
 }
+
 const { receipt } = defineProps<{ receipt: Receipt }>()
+const layout = computed(() => receipt.layout)
 const barcodeValue = computed(() => {
     const names = receipt.items.map(i => i.name).reduce((a, b) => a + b, "")
-    return Math.max(hashCode(names), -hashCode(names)).toString()
+    return hashCode(names)
+})
+const receiptStyle = computed(() => {
+    const l = layout.value
+    const s = {
+        'background-color': getOrDefault(l, "background", 'rgb(235, 245, 245)'),
+        'width': '400px',
+        'font-family': getOrDefault(l, "font", "Inconsalata"),
+        'padding': `${getOrDefault(l, "py", "1rem")} ${getOrDefault(l, "px", "1rem")}`
+    }
+    return s
 })
 </script>
 
 <template>
-    <div id="receipt" class="flex flex-col items-center leading-4"
-        :style="{ 'background-color': receipt.background, 'width': '400px', 'font-family': receipt.font, 'padding': `${receipt.py} ${receipt.px}` }">
-        <template v-if="receipt.layout == 'lidl'">
+    <div id="receipt" class="flex flex-col items-center leading-4" :style="receiptStyle">
+        <template v-if="receipt.layoutBase == 'lidl'">
             <img class="logo w-20" src="/assets/lidl-logo.png" alt="lidl-logo">
             <div class="address whitespace-pre text-center">
                 {{ receipt.address }}
             </div>
-            <ReceiptItems :items="receipt.items" :layout="receipt.itemsLayout" :card="receipt.card" />
+            <ReceiptItems :items="receipt.items" :layout="layout.itemsLayout" :card="receipt.card" />
             <div class="mt-6 flex flex-col items-center">
-                <Barcode v-if="receipt.barcode" :value="barcodeValue" :height="receipt.barcodeHeight" />
-                <qrcode-vue v-if="receipt.qrcode"
-                    class="qrcode"
+                <Barcode v-if="layout.barcode" :value="barcodeValue" :height="layout.barcodeHeight" />
+                <qrcode-vue v-if="layout.qrcode" class="qrcode"
                     :value="barcodeValue + 'aö42q8780cjlöö344jkl238907897cxv9nklj23q4öjklxcv8q3ß9ß5390ß89cjvadsjcyvjüwerou8923#k'"
                     background="transparent" :size="200" />
             </div>
@@ -66,11 +68,13 @@ const barcodeValue = computed(() => {
 </template>
 
 <style>
-.masks .logo, .masks .qrcode {
+.masks .logo,
+.masks .qrcode {
     opacity: 0;
 }
+
 .masks #receipt {
-  color: transparent;
-  background-color: black !important;
+    color: transparent;
+    background-color: black !important;
 }
 </style>

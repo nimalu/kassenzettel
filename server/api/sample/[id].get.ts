@@ -3,7 +3,10 @@ import { useRepo } from "../../utils/repo"
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')
     if (!id) {
-        throw new Error("Bad Request")
+        throw createError({
+            statusCode: 404,
+            statusMessage: "ID not found"
+        })
     }
     const repo = await useRepo()
     const sample = await repo.readSample(id)

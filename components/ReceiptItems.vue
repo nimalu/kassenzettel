@@ -3,7 +3,6 @@
 export type ReceiptItem = {
     name: string,
     price: number,
-    negative?: boolean,
     taxClass?: string,
     detail?: string
 }
@@ -45,7 +44,7 @@ const taxGroups = computed(() => {
                     {{ item.name }}
                 </div>
                 <div class="text-right">
-                    {{ item.negative ? "-" : "&nbsp;" }}
+                    {{ item.price < 0 ? "-" : "&nbsp;" }}
                     {{ item.price.toFixed(2) }}
                 </div>
                 <div>
@@ -118,7 +117,7 @@ const taxGroups = computed(() => {
                 </div>
                 <div class="text-right">
                     {{ item.price }}
-                    {{ item.negative ? "-" : "&nbsp;" }}
+                    {{ item.price < 0 ? "-" : "&nbsp;" }}
                 </div>
                 <div>
                     {{ item.taxClass }}

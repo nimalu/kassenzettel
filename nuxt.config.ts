@@ -11,7 +11,10 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      script: [{src: "https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"}]
+      script: [{ src: "https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js" }]
     }
+  },
+  typescript: {
+    strict: true
   }
 })

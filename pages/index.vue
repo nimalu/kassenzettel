@@ -10,7 +10,7 @@ async function hit() {
 
 const masks = ref(false)
 const receipt = reactive<Receipt>({
-    layout: "lidl",
+    layoutBase: "lidl",
     items: [
         { name: "Bananen 1a Madeira", price: 2.12, taxClass: "A", detail: "2kg" },
         { name: "Paprika 1a", price: 3.84, taxClass: "A" },
@@ -21,12 +21,14 @@ const receipt = reactive<Receipt>({
     address: "Mageburger Straße\n39245 Gommern\nMo-Sa 8-14 Uhr So geschlossen",
     detail1: "UST-ID-NR: DE8141100850\n* * * *\nVIELEN DANK FÜR IHREN EINKAUF!\nLIDL LOHNT SICH.\n* * * *\n+ Ausbildung oder Duales Studium? +\nLidl bietet beides!\nVertrieb, Logistik oder Büro.\nBewerben Sie sich jetzt für den\nAusbildungs-/ Studienbeginn 2015\n+ + + www.karriere-bei-lidl.de + + +",
     date: new Date(2720987),
-    background: "rgb(229, 235, 245)",
-    itemsLayout: "lidl",
-    font: "Inconsolata",
     card: false,
-    px: "1rem",
-    py: "1rem"
+    layout: {
+        background: "rgb(229, 235, 245)",
+        itemsLayout: "lidl",
+        font: "Inconsolata",
+        px: "1rem",
+        py: "1rem"
+    }
 })
 
 </script>
@@ -35,18 +37,18 @@ const receipt = reactive<Receipt>({
     <main class="p-10 flex gap-x-8 items-start" :class="{ masks }">
         <div class="grid grid-cols-1 gap-4 content-start">
             <Switch label="Masks" v-model="masks" />
-            <Select label="Layout" v-model="receipt.layout" :options="['lidl']" />
-            <Select label="ItemsLayout" v-model="receipt.itemsLayout" :options="['lidl', 'real']" />
+            <Select label="Layout" v-model="receipt.layoutBase" :options="['lidl']" />
+            <Select label="ItemsLayout" v-model="receipt.layout.itemsLayout" :options="['lidl', 'real']" />
             <ItemEditor v-model="receipt.items" />
-            <Switch label="QRCode" v-model="receipt.qrcode" />
-            <Switch label="Barcode" v-model="receipt.barcode" />
+            <Switch label="QRCode" v-model="receipt.layout.qrcode" />
+            <Switch label="Barcode" v-model="receipt.layout.barcode" />
             <ClientOnly>
-                <ColorPicker v-model="receipt.background" label="Background" />
+                <ColorPicker v-model="receipt.layout.background" label="Background" />
                 <DatePicker label="Date" v-model="receipt.date" />
             </ClientOnly>
             <TextArea v-model="receipt.address" label="Address" />
             <TextArea v-model="receipt.detail1" label="Detail 1" />
-            <Select label="Font" v-model="receipt.font" :options="['Inconsolata', 'DejavuSansMono']" />
+            <Select label="Font" v-model="receipt.layout.font" :options="['Inconsolata', 'DejavuSansMono']" />
             <Switch label="Card" v-model="receipt.card" />
         </div>
         <Receipt :receipt="receipt" />
