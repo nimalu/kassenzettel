@@ -1,4 +1,3 @@
-import fs from "fs"
 import { z } from 'zod'
 import { useRepo } from "../utils/repo"
 import archiver from "archiver"
@@ -39,7 +38,6 @@ export default defineEventHandler(async (event) => {
     const receipts = body.receipts
 
     const repo = await useRepo()
-    const path = `tmp/${new Date().getTime()}`
 
     const res = event.node.res
     const archive = archiver('zip')
@@ -57,14 +55,13 @@ export default defineEventHandler(async (event) => {
             `http://localhost:3000/receipt/${id}`,
             "#receipt"
         )
-        archive.append(image, { name: `${path}/images/${id}.png` })
+        archive.append(image, { name: `$images/${id}.png` })
         const mask = await screenshot(
             `http://localhost:3000/receipt/${id}?masks=1`,
             "#receipt",
         )
-        archive.append(mask, { name: `${path}/masks/${id}.png` })
-        archive.append(stringifiedReceipt, { name: `${path}/data/${id}.json` })
+        archive.append(mask, { name: `/masks/${id}.png` })
+        archive.append(stringifiedReceipt, { name: `/data/${id}.json` })
     }))
     await archive.finalize()
-    fs.rmSync(path, { recursive: true })
 })
