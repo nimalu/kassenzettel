@@ -24,7 +24,6 @@ const receipt = reactive<Receipt>({
     card: false,
     layout: {
         background: "rgb(229, 235, 245)",
-        itemsLayout: "lidl",
         font: "Inconsolata",
         px: "1rem",
         py: "1rem"
@@ -37,8 +36,7 @@ const receipt = reactive<Receipt>({
     <main class="p-10 flex gap-x-8 items-start" :class="{ masks }">
         <div class="grid grid-cols-1 gap-4 content-start">
             <Switch label="Masks" v-model="masks" />
-            <Select label="Layout" v-model="receipt.layoutBase" :options="['lidl']" />
-            <Select label="ItemsLayout" v-model="receipt.layout.itemsLayout" :options="['lidl', 'real']" />
+            <Select label="Layout" v-model="receipt.layoutBase" :options="['lidl', 'real']" />
             <ItemEditor v-model="receipt.items" />
             <Switch label="QRCode" v-model="receipt.layout.qrcode" />
             <Switch label="Barcode" v-model="receipt.layout.barcode" />

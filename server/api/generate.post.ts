@@ -18,12 +18,11 @@ const layoutSchema = z.object({
     font: z.optional(z.enum(["Inconsolata", "DejaVuSansMono"])),
     barcode: z.optional(z.boolean()),
     qrcode: z.optional(z.boolean()),
-    itemsLayout: z.optional(z.enum(["lidl", "real"]))
 })
 
 const receiptSchema = z.object({
     items: z.array(receiptItemSchema).default([]),
-    layoutBase: z.enum(["lidl"]).default("lidl"),
+    layoutBase: z.enum(["lidl", "real"]).default("lidl"),
     layout: layoutSchema,
     card: z.optional(z.boolean()),
     address: z.optional(z.string()),
