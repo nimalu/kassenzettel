@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { useRepo } from "../utils/repo"
 import archiver from "archiver"
+import { useLogger } from '@nuxt/kit'
 
 const receiptItemSchema = z.object({
     name: z.string(),
@@ -20,9 +21,9 @@ const layoutSchema = z.object({
 })
 
 const receiptSchema = z.object({
-    items: z.array(receiptItemSchema).default([]),
-    layoutBase: z.enum(["lidl", "real"]).default("lidl"),
-    layout: layoutSchema,
+    items: z.optional(z.array(receiptItemSchema).default([])),
+    layoutBase: z.optional(z.enum(["lidl", "real"]).default("lidl")),
+    layout: z.optional(layoutSchema),
     card: z.optional(z.boolean()),
     address: z.optional(z.string()),
     date: z.optional(z.date()),
@@ -32,6 +33,8 @@ const receiptSchema = z.object({
 const bodySchema = z.object({
     receipts: z.array(receiptSchema)
 })
+
+const logger = useLogger("GenerateEndpoint")
 
 export default defineEventHandler(async (event) => {
     const body = await readValidatedBody(event, b => bodySchema.parse(b))
@@ -49,13 +52,14 @@ export default defineEventHandler(async (event) => {
 
     await Promise.all(receipts.map(async receipt => {
         const id = await repo.createSample()
+        logger.info("Taking screenshot of ", id)
         const stringifiedReceipt = JSON.stringify(receipt)
         await repo.updateSample({ id: id.toString(), receipt: stringifiedReceipt })
         const image = await screenshot(
             `http://localhost:3000/receipt/${id}`,
             "#receipt"
         )
-        archive.append(image, { name: `$images/${id}.png` })
+        archive.append(image, { name: `/images/${id}.png` })
         const mask = await screenshot(
             `http://localhost:3000/receipt/${id}?masks=1`,
             "#receipt",

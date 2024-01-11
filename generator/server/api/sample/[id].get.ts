@@ -10,6 +10,12 @@ export default defineEventHandler(async (event) => {
     }
     const repo = await useRepo()
     const sample = await repo.readSample(id)
+    if (!sample) {
+        throw createError({
+            statusCode: 404,
+            statusMessage: "ID not found"
+        })
+    }
     return {
         sample: {
             id: sample.id,

@@ -13,7 +13,7 @@ class Repo {
 
     async createSample() {
         const id = ++this.topId
-        this.logger.debug("Creating sample ", id)
+        this.logger.info("Creating sample ", id)
         const sample: SampleDB = {
             id: id.toString(), receipt: ""
         }
