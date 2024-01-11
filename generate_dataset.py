@@ -1,15 +1,12 @@
 import os
 import json
-import csv
-import random
 import requests
 import tqdm
 
+from generate_receipt import generate_receipts
+
 def main():
-    with open("./data/items.csv", "r") as file:
-        items = read_items_ds(file)
-    
-    receipts = list([generate_receipt(items) for _  in range(20)])
+    receipts = generate_receipts(100)
     
     os.makedirs("./kassenzettel/images", exist_ok=True)
     os.makedirs("./kassenzettel/masks", exist_ok=True)
@@ -31,29 +28,6 @@ def download_receipt(receipt, masks=False):
     r.raise_for_status()
     return r.content
     
-
-def generate_receipt(items):
-    item_length = int(max(1, random.normalvariate(12, 10)))
-    items_base = random.choices(items, k=item_length)
-    taxClasses = random.choice([["A", "B"], ["E", "F"]])
-
-    items = []
-    for (name, price) in items_base:
-        price = random.normalvariate(price, price*0.5)
-        taxClass = random.choice(taxClasses)
-        items.append({
-            "name": name,
-            "price": round(price, 2),
-            "taxClass": taxClass
-        })
-    return {
-        "items": items
-    }
-
-def read_items_ds(f):
-    reader = csv.reader(f)
-    next(reader)
-    return [(row[0], float(row[1])) for row in reader]
 
 if __name__ == "__main__":
     main()
