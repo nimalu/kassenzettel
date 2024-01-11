@@ -68,7 +68,7 @@ const taxGroups = computed(() => {
                 {{ receipt.address }}
             </div>
             <div class="w-full">
-                <div class="items w-full grid gap-x-1 grid-cols-[1fr_max-content_0.5rem]">
+                <div class="items w-full grid gap-x-1 gap-y-1 grid-cols-[1fr_max-content_0.5rem]">
                     <div>
                     </div>
                     <div>
@@ -78,30 +78,45 @@ const taxGroups = computed(() => {
                     </div>
                     <template v-for="item in receipt.items">
                         <div>
-                            {{ item.name }}
+                            <span class="item-name">
+                                {{ item.name }}
+                            </span>
                         </div>
                         <div class="text-right">
-                            {{ item.price < 0 ? "-" : "&nbsp;" }} {{ Math.max(0,item.price).toFixed(2) }} </div>
-                                <div>
-                                    {{ item.taxClass }}
-                                </div>
-                                <template v-if="item.detail">
-                                    <div>
-                                        &nbsp;&nbsp;&nbsp;
-                                        {{ item.detail }}
-                                    </div>
-                                    <div>
-                                    </div>
-                                    <div>
-                                    </div>
-                                </template>
+                            <span v-if="item.price < 0" class="item-price">
+                                -
+                            </span>
+                            <span v-else>
+                                &nbsp;
+                            </span>
+                            <span class="item-price">
+                                {{ Math.max(0, item.price).toFixed(2) }}
+                            </span>
+                        </div>
+                        <div>
+                            {{ item.taxClass }}
+                        </div>
+                        <template v-if="item.detail">
+                            <div>
+                                &nbsp;&nbsp;&nbsp;
+                                {{ item.detail }}
+                            </div>
+                            <div>
+                            </div>
+                            <div>
+                            </div>
+                        </template>
                     </template>
                 </div>
                 <div>
                     <div class="text-right">-----------</div>
                     <div class="flex justify-between text-3xl">
                         <div>zu zahlen</div>
-                        <div>{{ price.toFixed(2) }}</div>
+                        <div>
+                            <span class="receipt-price">
+                                {{ price.toFixed(2) }}
+                            </span>
+                        </div>
                     </div>
                     <div class="text-right">-----------</div>
                     <div class="text-right -mt-5">-----------</div>
@@ -249,8 +264,17 @@ const taxGroups = computed(() => {
     background-color: black !important;
 }
 
-.masks .items {
+.masks .item-name {
     color: red;
     background-color: red;
+}
+
+.masks .item-price {
+    color: green;
+    background-color: green;
+}
+.masks .receipt-price {
+    color: blue;
+    background-color: blue;
 }
 </style>
