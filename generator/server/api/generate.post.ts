@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import { useRepo } from "../utils/repo"
-import archiver from "archiver"
 import { useLogger } from '@nuxt/kit'
 
 const receiptItemSchema = z.object({
@@ -48,7 +47,7 @@ export default defineEventHandler(async (event) => {
     await repo.updateSample({ id: id.toString(), receipt: stringifiedReceipt })
 
     const res = event.node.res
-    // res.setHeader("Content-Type", "application/zip")
+    res.setHeader("Content-Type", "image/png")
 
     logger.info("Taking screenshot of ", id)
     if (masks) {
