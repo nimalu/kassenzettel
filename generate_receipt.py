@@ -8,15 +8,20 @@ def generate_receipt(itemsList):
 
     items = []
     for (name, price) in items_base:
-        price = random.normalvariate(price, price*0.5)
-        taxClass = random.choice(taxClasses)
         items.append({
             "name": name,
-            "price": round(price, 2),
-            "taxClass": taxClass
+            "price": round(random.normalvariate(price, price*0.5), 2),
+            "taxClass": random.choice(taxClasses)
         })
     return {
-        "items": items
+        "items": items,
+        "layoutBase": random.choice(["lidl", "real"]),
+        "card": random.choice([True, False]),
+        "layout": {
+            "font": random.choice(["Inconsolata", "DejaVuSansMono"]),
+            "qrcode": random.choice([True, False]),
+            "barcode": random.choice([True, False]),
+        }
     }
 
 def read_items_ds(f):
