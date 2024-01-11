@@ -26,7 +26,7 @@ const receiptSchema = z.object({
     layout: z.optional(layoutSchema),
     card: z.optional(z.boolean()),
     address: z.optional(z.string()),
-    date: z.optional(z.date()),
+    date: z.date().default(new Date()),
     detail1: z.optional(z.string())
 })
 

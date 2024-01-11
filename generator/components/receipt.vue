@@ -81,7 +81,7 @@ const taxGroups = computed(() => {
                             {{ item.name }}
                         </div>
                         <div class="text-right">
-                            {{ item.price < 0 ? "-" : "&nbsp;" }} {{ item.price.toFixed(2) }} </div>
+                            {{ item.price < 0 ? "-" : "&nbsp;" }} {{ Math.max(0,item.price).toFixed(2) }} </div>
                                 <div>
                                     {{ item.taxClass }}
                                 </div>
