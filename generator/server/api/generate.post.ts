@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
     res.setHeader("Content-Type", "application/zip")
     archive.pipe(res)
 
-    await Promise.all(receipts.map(async receipt => {
+    for (let receipt of receipts) {
         const id = await repo.createSample()
         logger.info("Taking screenshot of ", id)
         const stringifiedReceipt = JSON.stringify(receipt)
@@ -66,6 +66,6 @@ export default defineEventHandler(async (event) => {
         )
         archive.append(mask, { name: `kassenzettel/masks/${id}.png` })
         archive.append(stringifiedReceipt, { name: `kassenzettel/data/${id}.json` })
-    }))
+    }
     await archive.finalize()
 })

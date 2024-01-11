@@ -6,25 +6,28 @@ def main():
     with open("./data/items.csv", "r") as file:
         items = read_items_ds(file)
     
+    data = { "receipts": [generate_receipt(items) for i in range(15)] }
+    url = "http://localhost:3000/api/generate"
+    with requests.post(url, json=data, stream=True) as r:
+        download_file(r, "./kassenzettel.zip")
+
+def generate_receipt(items):
     item_length = int(max(1, random.normalvariate(12, 10)))
-    items_base = random.sample(items, item_length)
-    taxClasses = random.sample([["A", "B"], ["E", "F"]], 1)[0]
+    items_base = random.choices(items, k=item_length)
+    taxClasses = random.choice([["A", "B"], ["E", "F"]])
 
     items = []
     for (name, price) in items_base:
-        price = random.normalvariate(price, 2)
-        taxClass = random.sample(taxClasses, 1)[0]
+        price = random.normalvariate(price, price*0.5)
+        taxClass = random.choice(taxClasses)
         items.append({
             "name": name,
             "price": round(price, 2),
             "taxClass": taxClass
         })
-    print(items)
-    
-    data = { "receipts": [{"items": items}] }
-    url = "http://localhost:3000/api/generate"
-    with requests.post(url, json=data, stream=True) as r:
-        download_file(r, "./kassenzettel.zip")
+    return {
+        "items": items
+    }
 
 def read_items_ds(f):
     reader = csv.reader(f)
