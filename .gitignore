@@ -1,3 +1,6 @@
 .env
 kassenzettel
 kassenzettel.zip
+*.pyc
+*.cpython
+__pycache__

@@ -137,7 +137,7 @@ const taxGroups = computed(() => {
                         <div>{{ taxGroup.net.toFixed(2) }}</div>
                         <div class="text-right">{{ taxGroup.gross.toFixed(2) }}</div>
                     </template>
-                    <div class="col-span-4">-----------------------------------------------</div>
+                    <div class="col-span-4 whitespace-nowrap">-----------------------------------------------</div>
                     <div>Summe</div>
                     <div>{{ taxGroups.reduce((a, b) => b.tax + a, 0).toFixed(2) }}</div>
                     <div>{{ taxGroups.reduce((a, b) => b.net + a, 0).toFixed(2) }}</div>
@@ -148,7 +148,7 @@ const taxGroups = computed(() => {
                 <Barcode v-if="layout && layout.barcode" :value="barcodeValue" :height="layout.barcodeHeight" />
                 <qrcode-vue v-if="layout && layout.qrcode" class="qrcode"
                     :value="barcodeValue + 'aö42q8780cjlöö344jkl238907897cxv9nklj23q4öjklxcv8q3ß9ß5390ß89cjvadsjcyvjüwerou8923#k'"
-                    background="transparent" :size="200" />
+                    background="transparent" :size="130" />
             </div>
             <div class="w-full flex justify-between">
                 <div>5571</div>
