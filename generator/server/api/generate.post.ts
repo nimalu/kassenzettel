@@ -6,7 +6,7 @@ import { useLogger } from '@nuxt/kit'
 const receiptItemSchema = z.object({
     name: z.string(),
     price: z.number(),
-    taxClass: z.optional(z.enum(["lidl", "real"])),
+    taxClass: z.optional(z.string()),
     detail: z.optional(z.string())
 })
 
@@ -37,8 +37,11 @@ const bodySchema = z.object({
 const logger = useLogger("GenerateEndpoint")
 
 export default defineEventHandler(async (event) => {
+    // const b = await readBody(event)
+    // console.log(JSON.stringify(b))
     const body = await readValidatedBody(event, b => bodySchema.parse(b))
     const receipts = body.receipts
+    console.log("Starting generation of ", receipts.length, "receipts")
 
     const repo = await useRepo()
 
@@ -46,9 +49,6 @@ export default defineEventHandler(async (event) => {
     const archive = archiver('zip')
     res.setHeader("Content-Type", "application/zip")
     archive.pipe(res)
-    archive.directory("public/data", "data")
-    archive.directory("public/images", "images")
-    archive.directory("public/masks", "masks")
 
     await Promise.all(receipts.map(async receipt => {
         const id = await repo.createSample()
@@ -59,13 +59,13 @@ export default defineEventHandler(async (event) => {
             `http://localhost:3000/receipt/${id}`,
             "#receipt"
         )
-        archive.append(image, { name: `/images/${id}.png` })
+        archive.append(image, { name: `kassenzettel/images/${id}.png` })
         const mask = await screenshot(
             `http://localhost:3000/receipt/${id}?masks=1`,
             "#receipt",
         )
-        archive.append(mask, { name: `/masks/${id}.png` })
-        archive.append(stringifiedReceipt, { name: `/data/${id}.json` })
+        archive.append(mask, { name: `kassenzettel/masks/${id}.png` })
+        archive.append(stringifiedReceipt, { name: `kassenzettel/data/${id}.json` })
     }))
     await archive.finalize()
 })

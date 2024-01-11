@@ -17,9 +17,9 @@ export type ReceiptItem = {
     detail?: string
 }
 export interface Receipt {
-    items: ReceiptItem[]
-    layoutBase: "lidl" | "real",
-    layout: Layout,
+    items?: ReceiptItem[]
+    layoutBase?: "lidl" | "real",
+    layout?: Layout,
     address?: string,
     date?: Date,
     detail1?: string,
@@ -29,20 +29,20 @@ export interface Receipt {
 const { receipt } = defineProps<{ receipt: Receipt }>()
 const layout = computed(() => receipt.layout)
 const barcodeValue = computed(() => {
-    const names = receipt.items.map(i => i.name).reduce((a, b) => a + b, "")
+    const names = (receipt.items ?? []).map(i => i.name).reduce((a, b) => a + b, "")
     return hashCode(names)
 })
 const receiptStyle = computed(() => {
-    const l = layout.value
+    const l = layout.value ?? {}
     const s = {
         'background-color': getOrDefault(l, "background", 'rgb(235, 245, 245)'),
         'width': '400px',
-        'font-family': getOrDefault(l, "font", "Inconsalata"),
+        'font-family': getOrDefault(l, "font", "Inconsolata"),
         'padding': `${getOrDefault(l, "py", "1rem")} ${getOrDefault(l, "px", "1rem")}`
     }
     return s
 })
-const price = computed(() => receipt.items.reduce((a, b) => b.price + a, 0))
+const price = computed(() => (receipt.items ?? []).reduce((a, b) => b.price + a, 0))
 const payed = computed(() => Math.round(price.value / 10.0 + 0.5) * 10)
 const taxGroups = computed(() => {
     const groups: Record<string, ReceiptItem[]> = Object.groupBy(receipt.items, ({ taxClass }: ReceiptItem) => taxClass)
@@ -62,7 +62,7 @@ const taxGroups = computed(() => {
 
 <template>
     <div id="receipt" class="flex flex-col items-center leading-4" :style="receiptStyle">
-        <template v-if="receipt.layoutBase == 'lidl'">
+        <template v-if="!receipt.layoutBase || receipt.layoutBase == 'lidl'">
             <img class="logo w-20" src="/assets/lidl-logo.png" alt="lidl-logo">
             <div class="address whitespace-pre text-center">
                 {{ receipt.address }}
@@ -145,8 +145,8 @@ const taxGroups = computed(() => {
                 </div>
             </div>
             <div class="mt-6 flex flex-col items-center">
-                <Barcode v-if="layout.barcode" :value="barcodeValue" :height="layout.barcodeHeight" />
-                <qrcode-vue v-if="layout.qrcode" class="qrcode"
+                <Barcode v-if="layout && layout.barcode" :value="barcodeValue" :height="layout.barcodeHeight" />
+                <qrcode-vue v-if="layout && layout.qrcode" class="qrcode"
                     :value="barcodeValue + 'aö42q8780cjlöö344jkl238907897cxv9nklj23q4öjklxcv8q3ß9ß5390ß89cjvadsjcyvjüwerou8923#k'"
                     background="transparent" :size="200" />
             </div>
