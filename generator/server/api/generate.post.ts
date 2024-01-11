@@ -20,7 +20,7 @@ const layoutSchema = z.object({
     qrcode: z.optional(z.boolean()),
 })
 
-const receiptSchema = z.object({
+export const receiptSchema = z.object({
     items: z.optional(z.array(receiptItemSchema).default([])),
     layoutBase: z.optional(z.enum(["lidl", "real"]).default("lidl")),
     layout: z.optional(layoutSchema),
@@ -31,41 +31,35 @@ const receiptSchema = z.object({
 })
 
 const bodySchema = z.object({
-    receipts: z.array(receiptSchema)
+    receipt: receiptSchema,
+    masks: z.boolean().default(false)
 })
 
 const logger = useLogger("GenerateEndpoint")
 
 export default defineEventHandler(async (event) => {
-    // const b = await readBody(event)
-    // console.log(JSON.stringify(b))
     const body = await readValidatedBody(event, b => bodySchema.parse(b))
-    const receipts = body.receipts
-    console.log("Starting generation of ", receipts.length, "receipts")
+    const receipt = body.receipt
+    const masks = body.masks
 
     const repo = await useRepo()
+    const id = await repo.createSample()
+    const stringifiedReceipt = JSON.stringify(receipt)
+    await repo.updateSample({ id: id.toString(), receipt: stringifiedReceipt })
 
     const res = event.node.res
-    const archive = archiver('zip')
-    res.setHeader("Content-Type", "application/zip")
-    archive.pipe(res)
+    // res.setHeader("Content-Type", "application/zip")
 
-    for (let receipt of receipts) {
-        const id = await repo.createSample()
-        logger.info("Taking screenshot of ", id)
-        const stringifiedReceipt = JSON.stringify(receipt)
-        await repo.updateSample({ id: id.toString(), receipt: stringifiedReceipt })
-        const image = await screenshot(
-            `http://localhost:3000/receipt/${id}`,
-            "#receipt"
-        )
-        archive.append(image, { name: `kassenzettel/images/${id}.png` })
-        const mask = await screenshot(
+    logger.info("Taking screenshot of ", id)
+    if (masks) {
+        return await screenshot(
             `http://localhost:3000/receipt/${id}?masks=1`,
             "#receipt",
         )
-        archive.append(mask, { name: `kassenzettel/masks/${id}.png` })
-        archive.append(stringifiedReceipt, { name: `kassenzettel/data/${id}.json` })
+    } else {
+        return await screenshot(
+            `http://localhost:3000/receipt/${id}`,
+            "#receipt"
+        )
     }
-    await archive.finalize()
 })

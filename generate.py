@@ -6,10 +6,10 @@ def main():
     with open("./data/items.csv", "r") as file:
         items = read_items_ds(file)
     
-    data = { "receipts": [generate_receipt(items) for i in range(15)] }
+    data = { "receipt": generate_receipt(items), "masks": True }
     url = "http://localhost:3000/api/generate"
     with requests.post(url, json=data, stream=True) as r:
-        download_file(r, "./kassenzettel.zip")
+        download_file(r, "./kassenzettel.png")
 
 def generate_receipt(items):
     item_length = int(max(1, random.normalvariate(12, 10)))
