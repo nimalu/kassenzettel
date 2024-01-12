@@ -184,25 +184,32 @@ const taxGroups = computed(() => {
                 <div class="items w-full pl-16 pr-6 mt-8 justify-between grid grid-cols-[max-content_1fr_max-content]">
                     <template v-for="item in receipt.items">
                         <div>
-                            {{ item.name }}
+                            <span class="item-name">
+                                {{ item.name }}
+                            </span>
                         </div>
                         <div class="text-right">
-                            {{ item.price }}
-                            {{ item.price < 0 ? "-" : "&nbsp;" }} </div>
-                                <div>
-                                    {{ item.taxClass }}
-                                </div>
-                                <template v-if="item.detail">
-                                    <div class="col-span-3">
-                                        {{ item.detail }}
-                                    </div>
-                                </template>
+                            <span class="item-price">
+                                {{ item.price }}
+                            </span>
+                            <span class="item-price">
+                                {{ item.price < 0 ? "-" : "&nbsp;" }} 
+                            </span>
+                        </div>
+                        <div>
+                            {{ item.taxClass }}
+                        </div>
+                        <template v-if="item.detail">
+                            <div class="col-span-3">
+                                {{ item.detail }}
+                            </div>
+                        </template>
                     </template>
                     <div class="flex justify-between font-bold">
                         <div>Summe</div>
                         <div>EUR</div>
                     </div>
-                    <div class="text-right font-bold">{{ price.toFixed(2) }}&nbsp;&nbsp;</div>
+                    <div class="text-right font-bold receipt-price">{{ price.toFixed(2) }}&nbsp;&nbsp;</div>
                     <div>&nbsp;</div>
                     <div class="col-span-3">&nbsp;</div>
                     <div class="flex justify-between">
@@ -273,6 +280,7 @@ const taxGroups = computed(() => {
     color: green;
     background-color: green;
 }
+
 .masks .receipt-price {
     color: blue;
     background-color: blue;
