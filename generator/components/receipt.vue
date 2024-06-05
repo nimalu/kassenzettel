@@ -63,7 +63,7 @@ const taxGroups = computed(() => {
 <template>
     <div id="receipt" class="flex flex-col items-center leading-4" :style="receiptStyle">
         <template v-if="!receipt.layoutBase || receipt.layoutBase == 'lidl'">
-            <img class="logo w-20" src="/assets/lidl-logo.png" alt="lidl-logo">
+            <div class="font-black text-3xl my-2">Logo</div>
             <div class="address whitespace-pre text-center">
                 {{ receipt.address }}
             </div>
@@ -176,7 +176,7 @@ const taxGroups = computed(() => {
             </div>
         </template>
         <template v-else-if="receipt.layoutBase == 'real'">
-            <img class="logo w-20" src="/assets/real-logo.png" alt="real-logo">
+            <div class="font-black text-3xl my-2">Logo</div>
             <div class="address whitespace-pre text-center">
                 {{ receipt.address }}
             </div>

@@ -19,7 +19,7 @@ const receipt = reactive<Receipt>({
         { name: "Jägermeister XL", price: 12.56, taxClass: "B" },
     ],
     address: "Mageburger Straße\n39245 Gommern\nMo-Sa 8-14 Uhr So geschlossen",
-    detail1: "UST-ID-NR: DE8141100850\n* * * *\nVIELEN DANK FÜR IHREN EINKAUF!\nLIDL LOHNT SICH.\n* * * *\n+ Ausbildung oder Duales Studium? +\nLidl bietet beides!\nVertrieb, Logistik oder Büro.\nBewerben Sie sich jetzt für den\nAusbildungs-/ Studienbeginn 2015\n+ + + www.karriere-bei-lidl.de + + +",
+    detail1: "UST-ID-NR: DE8141100850\n* * * *\nVIELEN DANK FÜR IHREN EINKAUF!\nNa logo.\n* * * *\n+ Ausbildung oder Duales Studium? +\nLogo bietet beides!\nVertrieb, Logistik oder Büro.\nBewerben Sie sich jetzt für den\nAusbildungs-/ Studienbeginn 2015\n+ + + www.karriere-bei-logo.de + + +",
     date: new Date(2720987),
     card: false,
     layout: {
