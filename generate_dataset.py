@@ -6,7 +6,7 @@ import tqdm
 from generate_receipt import generate_receipts
 
 def main():
-    receipts = generate_receipts(20)
+    receipts = generate_receipts(2000)
     
     os.makedirs("./kassenzettel/images", exist_ok=True)
     os.makedirs("./kassenzettel/masks", exist_ok=True)
